@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, VFC } from 'react'
 import { supabase } from '../utils/supabaseClient'
 
-export const Auth = () => {
+export const Auth: VFC = () => {
   const [isLoding, setIsLoding] = useState(false)
   const [email, setEmail] = useState('')
 

@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, VFC } from 'react'
 import { supabase } from '../utils/supabaseClient'
 
-export const Avatar = ({ url, size, onUpload }) => {
-  const [avatarUrl, setAvatarUrl] = useState(null)
+type Props = {
+  url: string | null | undefined
+  size: number
+  onUpload: (url: string) => void
+}
+
+export const Avatar: VFC<Props> = ({ url, size, onUpload }) => {
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
   useEffect(() => {
     if (url) downloadImage(url)
   }, [url])
 
-  const downloadImage = async (path) => {
+  const downloadImage = async (path: string) => {
     try {
+      // Downloads a file.
       const { data, error } = await supabase.storage
         .from('avatars')
         .download(path)
@@ -19,11 +26,11 @@ export const Avatar = ({ url, size, onUpload }) => {
       }
       const url = URL.createObjectURL(data)
       setAvatarUrl(url)
-    } catch (error) {
+    } catch (error: any) {
       console.log('Error downloading image: ', error.message)
     }
   }
-const uploadAvatar = async(event) => {
+  const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setIsUploading(true)
 
@@ -45,7 +52,7 @@ const uploadAvatar = async(event) => {
       }
 
       onUpload(filePath)
-    } catch (error) {
+    } catch (error: any) {
       alert(error.message)
     } finally {
       setIsUploading(false)

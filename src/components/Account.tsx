@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, VFC } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import { Avatar } from './Avatar'
 import { definitions } from '../../types/supabase'
+import { User, Session } from '@supabase/gotrue-js'
 
 type Profile = {
   username: string | undefined | null
@@ -9,7 +10,11 @@ type Profile = {
   avatar_url: string | undefined | null
 }
 
-export const Account = ({ session }) => {
+type Props = {
+  session: Session | null
+}
+
+export const Account: VFC<Props> = ({ session }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [username, setUsername] = useState<string | undefined | null>(null)
   const [website, setWebsite] = useState<string | undefined | null>(null)
@@ -22,7 +27,8 @@ export const Account = ({ session }) => {
   const getProfile = async () => {
     try {
       setIsLoading(true)
-      const user = supabase.auth.user()
+      // ブラウザのコンテキスト内では、user()は、ログインしているユーザーがいれば、そのユーザーデータを返す
+      const user: User | null = supabase.auth.user()
 
       let { data, error, status } = await supabase
         .from<definitions['profiles']>('profiles')
@@ -39,7 +45,7 @@ export const Account = ({ session }) => {
         setWebsite(data.website)
         setAvatarUrl(data.avatar_url)
       }
-    } catch (error) {
+    } catch (error: any) {
       alert(error.message)
     } finally {
       setIsLoading(false)
@@ -49,7 +55,7 @@ export const Account = ({ session }) => {
   const updateProfile = async ({ username, website, avatar_url }: Profile) => {
     try {
       setIsLoading(true)
-      const user = supabase.auth.user()
+      const user: User | null = supabase.auth.user()
 
       const updates = {
         id: user.id,
@@ -66,7 +72,7 @@ export const Account = ({ session }) => {
       if (error) {
         throw error
       }
-    } catch (error) {
+    } catch (error: any) {
       alert(error.message)
     } finally {
       setIsLoading(false)

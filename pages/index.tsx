@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../src/utils/supabaseClient'
 import { Auth } from '../src/components/Auth'
 import { Account } from '../src/components/Account'
-
+import { Session } from '@supabase/gotrue-js'
 
 const Home: NextPage = () => {
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState<Session | null>(null)
 
   useEffect(() => {
     // Returns the session data, if there is an active session.
@@ -23,7 +23,7 @@ const Home: NextPage = () => {
       {!session ? (
         <Auth />
       ) : (
-        <Account key={session.user.id} session={session} />
+        <Account key={session.user!.id} session={session} />
       )}
     </div>
   )

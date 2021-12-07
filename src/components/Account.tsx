@@ -65,6 +65,7 @@ export const Account: VFC<Props> = ({ session }) => {
         updated_at: new Date(),
       }
 
+      // テーブルへのUPSERT(レコードがなければINSERTを行い、レコードがあればUPDATEを行う処理)を実行
       let { error } = await supabase.from('profiles').upsert(updates, {
         returning: 'minimal', // Don't return the value after inserting
       })
@@ -123,6 +124,7 @@ export const Account: VFC<Props> = ({ session }) => {
       </div>
 
       <div>
+        {/* ブラウザコンテキスト内で、ログインしたユーザーをブラウザセッションから削除してログアウトする*/}
         <button
           className="button block"
           onClick={() => supabase.auth.signOut()}

@@ -8,6 +8,7 @@ export const Auth: VFC = () => {
   const handleLogin = async (email: string) => {
     try {
       setIsLoding(true)
+      // 既存のユーザーにログインするか、サードパーティのプロバイダーを介してログインします。
       const { error } = await supabase.auth.signIn({ email })
       if (error) throw error
       alert('Check your email for the login link!')

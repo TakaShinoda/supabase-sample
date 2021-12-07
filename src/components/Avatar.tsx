@@ -24,6 +24,8 @@ export const Avatar: VFC<Props> = ({ url, size, onUpload }) => {
       if (error) {
         throw error
       }
+      // data: Blob(Binary Large OBject)
+      // URL.createObjectURL を使ってクライアント(ブラウザ)のメモリに保存されたblobにアクセス可能な一意のURLを生成可能
       const url = URL.createObjectURL(data)
       setAvatarUrl(url)
     } catch (error: any) {
